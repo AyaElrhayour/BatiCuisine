@@ -51,11 +51,11 @@ public class Client {
         this.telephone = telephone;
     }
 
-    public Boolean getProfessional() {
+    public Boolean getIsProfessional() {
         return isProfessional;
     }
 
-    public void setProfessional(Boolean professional) {
+    public void setIsProfessional(Boolean professional) {
         isProfessional = professional;
     }
 }

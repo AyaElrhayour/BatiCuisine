@@ -11,7 +11,7 @@ public interface ClientInterface {
     Optional<Client> addClient(Client client);
     Optional<Client> getClient(UUID id);
     List<Client> getAllClients();
-    Optional<Client> deleteClient(UUID id);
+    boolean deleteClient(UUID id);
 
 
 }
