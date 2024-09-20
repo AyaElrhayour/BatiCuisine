@@ -2,6 +2,7 @@ package org.youcode.baticuisine;
 
 import org.youcode.baticuisine.db.DBConnection;
 import org.youcode.baticuisine.subMenu.ClientSubMenu;
+import org.youcode.baticuisine.subMenu.ProjectSubMenu;
 
 import java.util.Scanner;
 
@@ -50,7 +51,7 @@ public static void main(String[] args) {
                     ClientSubMenu.clientManagementMenu();
                     break;
                 case 2:
-
+                    ProjectSubMenu.projectManagementMenu();
                     break;
                 case 3:
 
