@@ -18,6 +18,16 @@ public class ClientImplementation implements ClientInterface {
         conn = DBConnection.getInstance().establishConnection();
     }
 
+    private Client clientResultSet(ResultSet resultSet) throws SQLException {
+        Client client = new Client();
+        client.setId(UUID.fromString(resultSet.getString("id")));
+        client.setName(resultSet.getString("name"));
+        client.setAddress(resultSet.getString("address"));
+        client.setTelephone(resultSet.getString("telephone"));
+        client.setIsProfessional(resultSet.getBoolean("isProfessional"));
+        return client;
+    }
+
     @Override
     public Optional<Client> addClient(Client client) {
         String insertSQL = "INSERT INTO client (id, name, address, telephone, isProfessional) " +
@@ -41,19 +51,12 @@ public class ClientImplementation implements ClientInterface {
 
     @Override
     public Optional<Client> getClient(UUID id) {
-        Client client = null;
         String selectClientSQL = "SELECT * FROM client WHERE id = ?";
         try (PreparedStatement preparedStatement = conn.prepareStatement(selectClientSQL)) {
             preparedStatement.setString(1, id.toString());
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    client = new Client();
-                    client.setId(UUID.fromString(resultSet.getString("id")));
-                    client.setName(resultSet.getString("name"));
-                    client.setAddress(resultSet.getString("address"));
-                    client.setTelephone(resultSet.getString("telephone"));
-                    client.setIsProfessional(Boolean.valueOf(resultSet.getString("isProfessional")));
-
+                    Client client = clientResultSet(resultSet);
                     return Optional.of(client);
                 }
             }
@@ -62,6 +65,7 @@ public class ClientImplementation implements ClientInterface {
         }
         return Optional.empty();
     }
+
 
     @Override
     public Optional<Client> updateClient(UUID id, Client client) {
@@ -103,15 +107,10 @@ public class ClientImplementation implements ClientInterface {
     public List<Client> getAllClients() {
         List<Client> clients = new ArrayList<>();
         String selectAllSQL = "SELECT * FROM client";
-        try(Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery(selectAllSQL)){
-            while (resultSet.next()){
-                Client client = new Client();
-                client.setId(UUID.fromString(resultSet.getString("id")));
-                client.setName(resultSet.getString("name"));
-                client.setAddress(resultSet.getString("address"));
-                client.setTelephone(resultSet.getString("telephone"));
-                client.setIsProfessional(Boolean.valueOf("isProfessional"));
+        try (Statement statement = conn.createStatement();
+             ResultSet resultSet = statement.executeQuery(selectAllSQL)) {
+            while (resultSet.next()) {
+                Client client = clientResultSet(resultSet);
                 clients.add(client);
             }
         } catch (SQLException e) {
@@ -119,4 +118,5 @@ public class ClientImplementation implements ClientInterface {
         }
         return clients;
     }
+
 }
