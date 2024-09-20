@@ -21,7 +21,7 @@ public class ProjectImplementation implements ProjectInterface {
     }
 
     private Project projectResultSet(ResultSet resultSet) throws SQLException {
-        Project project = new Project();
+        Project project = new Project(UUID.randomUUID(), projectName, profitMargin, totalCost, projectState, clientId);
         project.setId(UUID.fromString(resultSet.getString("id")));
         project.setProjectName(resultSet.getString("project_name"));
         project.setProfitMargin(resultSet.getDouble("profit_margin"));

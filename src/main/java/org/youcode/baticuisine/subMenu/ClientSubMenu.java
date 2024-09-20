@@ -2,7 +2,7 @@ package org.youcode.baticuisine.subMenu;
 
 import org.youcode.baticuisine.repositories.implementation.ClientImplementation;
 import org.youcode.baticuisine.services.ClientService;
-import org.youcode.baticuisine.views.ClientViews;
+import org.youcode.baticuisine.views.ClientView;
 
 import java.util.Scanner;
 
@@ -44,7 +44,7 @@ public class ClientSubMenu {
             Scanner scanner = new Scanner(System.in);
             ClientImplementation clientImplementation = new ClientImplementation();
             ClientService clientService = new ClientService(clientImplementation);
-            ClientViews clientViews = new ClientViews(clientService);
+            ClientView clientViews = new ClientView(clientService);
 
             while (true) {
                 displayMenu();

@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
-public class ClientViews {
+public class ClientView {
     private final ClientService clientService;
     private final Scanner sc;
 
-    public ClientViews(ClientService clientService) {
+    public ClientView(ClientService clientService) {
         this.clientService = clientService;
         this.sc = new Scanner(System.in);
     }
