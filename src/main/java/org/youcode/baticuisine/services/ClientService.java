@@ -1,7 +1,7 @@
 package org.youcode.baticuisine.services;
 
 import org.youcode.baticuisine.entities.Client;
-import org.youcode.baticuisine.repositories.inertface.ClientInterface;
+import org.youcode.baticuisine.repositories.interfaces.ClientInterface;
 import org.youcode.baticuisine.utils.BaseValidation;
 
 import java.util.List;

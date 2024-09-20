@@ -2,7 +2,7 @@ package org.youcode.baticuisine.repositories.implementation;
 
 import org.youcode.baticuisine.db.DBConnection;
 import org.youcode.baticuisine.entities.Client;
-import org.youcode.baticuisine.repositories.inertface.ClientInterface;
+import org.youcode.baticuisine.repositories.interfaces.ClientInterface;
 
 import java.sql.*;
 import java.util.ArrayList;

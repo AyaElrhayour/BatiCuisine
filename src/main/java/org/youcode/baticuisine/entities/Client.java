@@ -1,5 +1,6 @@
 package org.youcode.baticuisine.entities;
 
+import java.util.List;
 import java.util.UUID;
 
 public class Client {
@@ -8,6 +9,8 @@ public class Client {
     private String address;
     private String telephone;
     private Boolean isProfessional;
+    private List<Project> projects;
+
 
     public Client(){}
 
@@ -57,5 +60,13 @@ public class Client {
 
     public void setIsProfessional(Boolean professional) {
         isProfessional = professional;
+    }
+
+    public List<Project> getProjects (){
+        return projects;
+    }
+
+    public void setProjects (List<Project> projects) {
+        this.projects = projects;
     }
 }

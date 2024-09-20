@@ -1,4 +1,4 @@
-package org.youcode.baticuisine.repositories.inertface;
+package org.youcode.baticuisine.repositories.interfaces;
 
 import org.youcode.baticuisine.entities.Client;
 
