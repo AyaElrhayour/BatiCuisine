@@ -10,8 +10,8 @@ public interface ClientInterface {
 
     Optional<Client> addClient(Client client);
     Optional<Client> getClient(UUID id);
-    List<Client> getAllClients();
+    Optional<Client> updateClient(UUID id, Client client);
     boolean deleteClient(UUID id);
-
+    List<Client> getAllClients();
 
 }

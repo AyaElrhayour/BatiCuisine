@@ -64,6 +64,42 @@ public class ClientImplementation implements ClientInterface {
     }
 
     @Override
+    public Optional<Client> updateClient(UUID id, Client client) {
+        String updateSQL = "UPDATE client SET name = ?, address = ?, telephone = ?, " +
+                "isProfessional = ? WHERE id = ?::uuid";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(updateSQL)) {
+            preparedStatement.setString(1, client.getName());
+            preparedStatement.setString(2, client.getAddress());
+            preparedStatement.setString(3, client.getTelephone());
+            preparedStatement.setBoolean(4, client.getIsProfessional());
+            preparedStatement.setObject(5, client.getId());
+
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 0) {
+                return Optional.empty();
+            }
+            return Optional.of(client);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+
+        }
+    }
+
+    @Override
+    public boolean deleteClient(UUID id) {
+        String deleteSQL = "DELETE FROM client WHERE id =?::uuid";
+        try(PreparedStatement preparedStatement = conn.prepareStatement(deleteSQL)){
+            preparedStatement.setObject(1,String.valueOf(id));
+
+            int affectedRows = preparedStatement.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
     public List<Client> getAllClients() {
         List<Client> clients = new ArrayList<>();
         String selectAllSQL = "SELECT * FROM client";
@@ -82,19 +118,5 @@ public class ClientImplementation implements ClientInterface {
             throw new RuntimeException(e);
         }
         return clients;
-    }
-
-    @Override
-    public boolean deleteClient(UUID id) {
-        String deleteSQL = "DELETE FROM client WHERE id =?::uuid";
-        try(PreparedStatement preparedStatement = conn.prepareStatement(deleteSQL)){
-            preparedStatement.setObject(1,String.valueOf(id));
-
-            int affectedRows = preparedStatement.executeUpdate();
-            return affectedRows > 0;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
     }
 }

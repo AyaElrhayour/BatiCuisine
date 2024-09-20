@@ -26,8 +26,29 @@ public class ClientService {
             System.out.println("Client Is Added Successfully!");
     }
 
-    public List<Client> getAllClients(){
-        return clientInterface.getAllClients();
+    public Client getClientById(String clientIdInput){
+        if (!BaseValidation.isUUIDValid(clientIdInput)){
+            System.out.println("Invalid UUID Format. Please Enter a Valid UUID.");
+            return null;
+        }
+        UUID id = UUID.fromString(clientIdInput);
+        Optional<Client> retrievedClient = clientInterface.getClient(id);
+        return retrievedClient.orElse(null);
+    }
+
+    public Client updateClient(String clientIdInput, Client client){
+        if(!BaseValidation.isUUIDValid(clientIdInput)) {
+            throw new IllegalArgumentException("Invalid UUID Format");
+        }
+
+        UUID id = UUID.fromString(clientIdInput);
+        Optional<Client> retrievedClient = clientInterface.getClient(id);
+        if (retrievedClient.isPresent()){
+            Optional<Client> updatedClient = clientInterface.updateClient(id, client);
+            return updatedClient.orElse(null);
+        }else {
+            return null;
+        }
     }
 
     public boolean deleteClient(String clientIdInput){
@@ -44,14 +65,8 @@ public class ClientService {
         }
     }
 
-    public Client getClientById(String clientIdInput){
-        if (!BaseValidation.isUUIDValid(clientIdInput)){
-            System.out.println("Invalid UUID Format. Please Enter a Valid UUID.");
-            return null;
-        }
-        UUID id = UUID.fromString(clientIdInput);
-        Optional<Client> retrievedClient = clientInterface.getClient(id);
-        return retrievedClient.orElse(null);
+    public List<Client> getAllClients(){
+        return clientInterface.getAllClients();
     }
 
 }
