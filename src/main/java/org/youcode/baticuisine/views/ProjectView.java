@@ -1,8 +1,12 @@
 package org.youcode.baticuisine.views;
 
+import org.youcode.baticuisine.entities.Client;
 import org.youcode.baticuisine.entities.Project;
+import org.youcode.baticuisine.enums.ProjectState;
+import org.youcode.baticuisine.services.ClientService;
 import org.youcode.baticuisine.services.ProjectService;
 import org.youcode.baticuisine.utils.BaseValidation;
+import org.youcode.baticuisine.utils.ProjectStateValidation;
 
 import java.util.List;
 import java.util.Scanner;
@@ -10,20 +14,29 @@ import java.util.UUID;
 
 public class ProjectView {
     private final ProjectService projectService;
+    private final ClientService clientService;
     private final Scanner sc;
 
-    public ProjectView(ProjectService projectService) {
+    public ProjectView(ProjectService projectService, ClientService clientService) {
         this.projectService = projectService;
+        this.clientService = clientService;
         this.sc = new Scanner(System.in);
     }
 
     public void addProject() {
         try {
-            String projectName = BaseValidation.getValidInput("Enter Project Name:", "name", sc);
-            Double profitMargin = Double.valueOf(BaseValidation.getValidInput("Enter Project Profit Margin:", "profitMargin", sc));
-            Double totalCost = Double.valueOf(BaseValidation.getValidInput("Enter Project Total Cost:", "totalCost", sc));
-            String projectState = BaseValidation.getValidInput("Enter Project State (e.g., 'PLANNED', 'IN_PROGRESS', 'COMPLETED'):", "projectState", sc);
-            UUID clientId = UUID.fromString(BaseValidation.getValidInput("Enter Associated Client ID:", "id", sc));
+            String projectName = BaseValidation.getValidInput("Enter Project Name:", "name");
+            Double profitMargin = Double.valueOf(BaseValidation.getValidInput("Enter Project Profit Margin:", "profitMargin"));
+            Double totalCost = Double.valueOf(BaseValidation.getValidInput("Enter Project Total Cost:", "totalCost"));
+            String clientId = BaseValidation.getValidInput("Enter Client ID:", "clientId");
+            Client client = clientService.getClientById(clientId);
+            ProjectState projectState = ProjectStateValidation.validateProjectState();
+
+
+            if (client == null) {
+                System.out.println("Client not found. Cannot create project.");
+                return;
+            }
 
             Project project = new Project(
                     UUID.randomUUID(),
@@ -31,15 +44,16 @@ public class ProjectView {
                     profitMargin,
                     totalCost,
                     projectState,
-                    clientId
+                    client
             );
-
             projectService.addProject(project);
             System.out.println("Project Added Successfully!");
+
         } catch (IllegalArgumentException e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
+
 
     public void getProjectById() {
         System.out.println("Enter Project ID: ");
@@ -72,14 +86,14 @@ public class ProjectView {
 
     public void updateProject() {
         try {
-            String id = BaseValidation.getValidInput("Enter The ID Of the Project You Wish To Update:", "Id", sc);
+            String id = BaseValidation.getValidInput("Enter The ID Of the Project You Wish To Update:", "Id");
             if (projectService.getProjectById(String.valueOf(UUID.fromString(id))) == null) {
                 throw new IllegalArgumentException("Project Not Found");
             }
-            String projectName = BaseValidation.getValidInput("Enter New Project Name:", "name", sc);
-            Double profitMargin = Double.valueOf(BaseValidation.getValidInput("Enter New Profit Margin:", "profitMargin", sc));
-            Double totalCost = Double.valueOf(BaseValidation.getValidInput("Enter New Total Cost:", "totalCost", sc));
-            String projectState = BaseValidation.getValidInput("Enter New Project State:", "projectState", sc);
+            String projectName = BaseValidation.getValidInput("Enter New Project Name:", "name");
+            Double profitMargin = Double.valueOf(BaseValidation.getValidInput("Enter New Profit Margin:", "profitMargin"));
+            Double totalCost = Double.valueOf(BaseValidation.getValidInput("Enter New Total Cost:", "totalCost"));
+            ProjectState projectState = ProjectStateValidation.validateProjectState();
 
             Project project = new Project(
                     UUID.randomUUID(),
@@ -87,7 +101,7 @@ public class ProjectView {
                     profitMargin,
                     totalCost,
                     projectState,
-                    null // You may handle client association if needed.
+                    null
             );
 
             Project updatedProject = projectService.updateProject(id, project);

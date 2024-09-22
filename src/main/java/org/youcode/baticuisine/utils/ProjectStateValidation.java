@@ -2,13 +2,17 @@ package org.youcode.baticuisine.utils;
 
 import org.youcode.baticuisine.enums.ProjectState;
 
+import static org.youcode.baticuisine.utils.BaseValidation.getValidInput;
+
 public class ProjectStateValidation {
 
-    public static ProjectState validateTransportType(String transportType) {
-        try {
-            return ProjectState.valueOf(transportType.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid Project State. Valid values are PENDING, COMPLETED, CANCELLED.");
+    public static ProjectState validateProjectState() {
+        while (true) {
+            try {
+                return validateProjectState();
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 }

@@ -20,31 +20,16 @@ public class ProjectImplementation implements ProjectInterface {
         conn = DBConnection.getInstance().establishConnection();
     }
 
-    private Project projectResultSet(ResultSet resultSet) throws SQLException {
-        Project project = new Project(UUID.randomUUID(), projectName, profitMargin, totalCost, projectState, clientId);
-        project.setId(UUID.fromString(resultSet.getString("id")));
-        project.setProjectName(resultSet.getString("project_name"));
-        project.setProfitMargin(resultSet.getDouble("profit_margin"));
-        project.setTotalCost(resultSet.getDouble("total_cost"));
-        project.setProjectState(ProjectState.valueOf(resultSet.getString("project_state")));
-
-        Client client = new Client();
-        client.setId(UUID.fromString(resultSet.getString("client_id")));
-        project.setClient(client);
-
-        return project;
-    }
-
     @Override
     public Optional<Project> addProject(Project project) {
-        String insertSQL = "INSERT INTO project (id, project_name, profit_margin, total_cost, project_state, client_id) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+        String insertSQL = "INSERT INTO project (id, ,name, profitMargin, totalCost, projectState, clientId) " +
+                "VALUES (?, ?, ?, ?, ?::projectstate, ?::uuid)";
         try (PreparedStatement preparedStatement = conn.prepareStatement(insertSQL)) {
             preparedStatement.setObject(1, project.getId());
             preparedStatement.setString(2, project.getProjectName());
             preparedStatement.setDouble(3, project.getProfitMargin());
             preparedStatement.setDouble(4, project.getTotalCost());
-            preparedStatement.setString(5, project.getProjectState().name());
+            preparedStatement.setString(5, project.getProjectState().toString());
             preparedStatement.setObject(6, project.getClient().getId());
 
             int affectedRows = preparedStatement.executeUpdate();
@@ -59,13 +44,12 @@ public class ProjectImplementation implements ProjectInterface {
 
     @Override
     public Optional<Project> getProject(UUID id) {
-        String selectProjectSQL = "SELECT * FROM project WHERE id = ?";
-        Project project = null;
-        try (PreparedStatement preparedStatement = conn.prepareStatement(selectProjectSQL)) {
+        String selectSQL = "SELECT * FROM project WHERE projectId = ?::uuid";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(selectSQL)) {
             preparedStatement.setObject(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    project = projectResultSet(resultSet);
+                    Project project = mapRowToProject(resultSet);
                     return Optional.of(project);
                 }
             }
@@ -76,15 +60,59 @@ public class ProjectImplementation implements ProjectInterface {
     }
 
     @Override
-    public Optional<Project> updateProject(UUID id, Project project) {
-        String updateSQL = "UPDATE project SET project_name = ?, profit_margin = ?, total_cost = ?, project_state = ?, client_id = ? WHERE id = ?";
+    public List<Project> getAllProjects() {
+        List<Project> projects = new ArrayList<>();
+        String selectAllSQL = "SELECT * FROM project";
+        try (Statement statement = conn.createStatement();
+             ResultSet resultSet = statement.executeQuery(selectAllSQL)) {
+            while (resultSet.next()) {
+                projects.add(mapRowToProject(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return projects;
+    }
+
+    @Override
+    public List<Project> getProjectsByClientId(UUID clientId) {
+        List<Project> projects = new ArrayList<>();
+        String selectSQL = "SELECT * FROM project WHERE clientId = ?::uuid";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(selectSQL)) {
+            preparedStatement.setObject(1, clientId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    projects.add(mapRowToProject(resultSet));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return projects;
+    }
+
+    @Override
+    public boolean deleteProject(UUID projectId) {
+        String deleteSQL = "DELETE FROM project WHERE projectId = ?::uuid";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(deleteSQL)) {
+            preparedStatement.setObject(1, projectId);
+            int affectedRows = preparedStatement.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Optional<Project> updateProject(UUID projectId, Project project) {
+        String updateSQL = "UPDATE project SET projectName = ?, profitMargin = ?, totalCost = ?, projectState = ?::projectstate, clientId = ?::uuid WHERE projectId = ?::uuid";
         try (PreparedStatement preparedStatement = conn.prepareStatement(updateSQL)) {
             preparedStatement.setString(1, project.getProjectName());
             preparedStatement.setDouble(2, project.getProfitMargin());
             preparedStatement.setDouble(3, project.getTotalCost());
-            preparedStatement.setString(4, project.getProjectState().name());
+            preparedStatement.setString(4, project.getProjectState().toString());
             preparedStatement.setObject(5, project.getClient().getId());
-            preparedStatement.setObject(6, project.getId());
+            preparedStatement.setObject(6, projectId);
 
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0) {
@@ -96,49 +124,14 @@ public class ProjectImplementation implements ProjectInterface {
         }
     }
 
-    @Override
-    public boolean deleteProject(UUID id) {
-        String deleteSQL = "DELETE FROM project WHERE id = ?";
-        try (PreparedStatement preparedStatement = conn.prepareStatement(deleteSQL)) {
-            preparedStatement.setObject(1, id);
-            int affectedRows = preparedStatement.executeUpdate();
-            return affectedRows > 0;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    private Project mapRowToProject(ResultSet resultSet) throws SQLException {
+        Project project = new Project();
+        project.setId(UUID.fromString(resultSet.getString("projectId")));
+        project.setProjectName(resultSet.getString("projectName"));
+        project.setProfitMargin(resultSet.getDouble("profitMargin"));
+        project.setTotalCost(resultSet.getDouble("totalCost"));
+        project.setProjectState(ProjectState.valueOf(resultSet.getString("projectState")));
+        project.setClient(new ClientImplementation().getClient(UUID.fromString(resultSet.getString("clientId"))).get());
+        return project;
     }
-
-    @Override
-    public List<Project> getAllProjects() {
-        List<Project> projects = new ArrayList<>();
-        String selectAllSQL = "SELECT * FROM project";
-        try (Statement statement = conn.createStatement();
-             ResultSet resultSet = statement.executeQuery(selectAllSQL)) {
-            while (resultSet.next()) {
-                projects.add(projectResultSet(resultSet));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return projects;
-    }
-
-    @Override
-    public List<Project> getProjectsByClientId(UUID clientId) {
-        List<Project> projects = new ArrayList<>();
-        String selectByClientSQL = "SELECT * FROM project WHERE client_id = ?";
-        try (PreparedStatement preparedStatement = conn.prepareStatement(selectByClientSQL)) {
-            preparedStatement.setObject(1, clientId);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    projects.add(projectResultSet(resultSet));
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return projects;
-    }
-
-
 }

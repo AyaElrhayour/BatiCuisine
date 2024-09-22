@@ -16,7 +16,7 @@ public class Project {
     private List<Estimate> estimates;
     private List<Component> components;
 
-    public Project(UUID id, String projectName, Double profitMargin, Double totalCost, String projectState, UUID clientId) {}
+    public Project() {}
 
     public Project(UUID id, String projectName, Double profitMargin,
                    Double totalCost, ProjectState projectState, Client client){

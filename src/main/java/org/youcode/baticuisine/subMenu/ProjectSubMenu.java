@@ -1,6 +1,8 @@
 package org.youcode.baticuisine.subMenu;
 
+import org.youcode.baticuisine.repositories.implementation.ClientImplementation;
 import org.youcode.baticuisine.repositories.implementation.ProjectImplementation;
+import org.youcode.baticuisine.services.ClientService;
 import org.youcode.baticuisine.services.ProjectService;
 import org.youcode.baticuisine.views.ProjectView;
 
@@ -45,7 +47,9 @@ public class ProjectSubMenu {
         Scanner scanner = new Scanner(System.in);
         ProjectImplementation projectImplementation = new ProjectImplementation();
         ProjectService projectService = new ProjectService(projectImplementation);
-        ProjectView projectView = new ProjectView(projectService);
+        ClientImplementation clientImplementation = new ClientImplementation();
+        ClientService clientService = new ClientService(clientImplementation);
+        ProjectView projectView = new ProjectView(projectService, clientService);
 
         while (true) {
             displayMenu();

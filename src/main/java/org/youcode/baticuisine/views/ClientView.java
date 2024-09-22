@@ -19,10 +19,10 @@ public class ClientView {
 
     public void addClient() {
         try {
-            String name = BaseValidation.getValidInput("Enter Client Name:", "name", sc);
-            String address = BaseValidation.getValidInput("Enter Client Address:", "address", sc);
-            String telephone = BaseValidation.getValidInput("Enter Client Phone Number:", "telephone", sc);
-            Boolean isProfessional = Boolean.valueOf(BaseValidation.getValidInput("Is The Client Professional (y/n)", "isProfessional", sc));
+            String name = BaseValidation.getValidInput("Enter Client Name:", "name");
+            String address = BaseValidation.getValidInput("Enter Client Address:", "address");
+            String telephone = BaseValidation.getValidInput("Enter Client Phone Number:", "telephone");
+            Boolean isProfessional = Boolean.valueOf(BaseValidation.getValidInput("Is The Client Professional (y/n)", "isProfessional"));
 
             Client client = new Client(
                     UUID.randomUUID(),
@@ -90,14 +90,14 @@ public class ClientView {
 
     public void updateClient() {
         try {
-            String id = BaseValidation.getValidInput("Enter The ID Of the Client You Wish To Update:", "Id", sc);
+            String id = BaseValidation.getValidInput("Enter The ID Of the Client You Wish To Update:", "Id");
             if (clientService.getClientById(String.valueOf(UUID.fromString(id))) == null) {
                 throw new IllegalArgumentException("Client Not Found");
             }
-            String name = BaseValidation.getValidInput("Enter New Client Name:", "name", sc);
-            String address = BaseValidation.getValidInput("Enter New Address:", "address", sc);
-            String telephone = BaseValidation.getValidInput("Enter New Telephone:", "telephone", sc);
-            Boolean isProfessional = Boolean.valueOf(BaseValidation.getValidInput("Is The Client Professional (y/n)", "isProfessional", sc));
+            String name = BaseValidation.getValidInput("Enter New Client Name:", "name");
+            String address = BaseValidation.getValidInput("Enter New Address:", "address");
+            String telephone = BaseValidation.getValidInput("Enter New Telephone:", "telephone");
+            Boolean isProfessional = Boolean.valueOf(BaseValidation.getValidInput("Is The Client Professional (y/n)", "isProfessional"));
 
             Client client = new Client(
                     UUID.randomUUID(),

@@ -5,6 +5,8 @@ import java.util.UUID;
 
 public class BaseValidation {
 
+    private static final Scanner sc = new Scanner(System.in);
+
     public static boolean isUUIDValid(String uuid) {
         try {
             UUID.fromString(uuid);
@@ -20,7 +22,7 @@ public class BaseValidation {
         }
     }
 
-    public static String getValidInput(String prompt, String fieldName, Scanner sc) {
+    public static String getValidInput(String prompt, String fieldName) {
         System.out.println(prompt);
         String input = sc.nextLine();
         validateNotEmpty(input, fieldName);

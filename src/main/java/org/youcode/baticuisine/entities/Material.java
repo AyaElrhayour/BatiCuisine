@@ -16,8 +16,6 @@ public class Material extends Component{
 
     }
 
-
-
     public Double getTransportCost() {
         return transportCost;
     }
