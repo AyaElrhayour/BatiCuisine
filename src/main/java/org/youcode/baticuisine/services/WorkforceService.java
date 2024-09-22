@@ -15,7 +15,6 @@ public class WorkforceService {
         this.workforceInterface = workforceInterface;
     }
 
-    // Method to add a new workforce
     public void addWorkforce(Workforce workforce) {
         if (workforce.getName() == null || workforce.getComponentType() == null || workforce.getTvaRate() == null
                 || workforce.getUnitaryPay() == null || workforce.getQuantity() == null || workforce.getOutputFactor() == null
@@ -32,7 +31,6 @@ public class WorkforceService {
         }
     }
 
-    // Method to retrieve workforce by project ID
     public Workforce getWorkforceByProjectId(String projectIdInput) {
         if (!BaseValidation.isUUIDValid(projectIdInput)) {
             System.out.println("Invalid UUID format. Please enter a valid UUID.");

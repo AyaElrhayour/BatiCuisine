@@ -23,7 +23,6 @@ public class WorkforceImplementation implements WorkforceInterface {
         conn = DBConnection.getInstance().establishConnection();
     }
 
-    // Helper method to map ResultSet to Workforce object
     private Workforce workforceResultSet(ResultSet resultSet) throws SQLException {
         Workforce workforce = new Workforce();
         workforce.setId(UUID.fromString(resultSet.getString("id")));
