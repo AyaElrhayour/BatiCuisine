@@ -16,20 +16,22 @@ public class MaterialService {
         this.materialInterface = materialInterface;
     }
 
-    public void addMaterial(Material material) {
+    public boolean addMaterial(Material material) {
         if (material.getName() == null || material.getComponentType() == null || material.getTvaRate() == null
                 || material.getUnitaryPay() == null || material.getQuantity() == null || material.getOutputFactor() == null
                 || material.getTransportCost() == null || material.getProject() == null) {
             System.out.println("Required fields are unfilled!");
-            return;
+            return false;
         }
         Optional<Material> addedMaterial = materialInterface.addMaterial(material);
         if (addedMaterial.isPresent()) {
             System.out.println("Material added successfully!");
+            return true;
         }
+        return false;
     }
 
-    public Material getMaterialByProjectId(String projectIdInput) {
+    public List<Material> getMaterialByProjectId(String projectIdInput) {
         if (!BaseValidation.isUUIDValid(projectIdInput)) {
             System.out.println("Invalid UUID format. Please enter a valid UUID.");
             return null;
@@ -37,7 +39,13 @@ public class MaterialService {
 
         UUID projectId = UUID.fromString(projectIdInput);
         Optional<Material> retrievedMaterial = materialInterface.getMaterialByProject(projectId);
-        return retrievedMaterial.orElse(null);
+        return (List<Material>) retrievedMaterial.orElse(null);
+    }
+
+    public double calculateTotalCost(List<Material> materials) {
+        return materials.stream()
+                .mapToDouble(material -> (material.getUnitaryPay() + material.getTransportCost()) * material.getQuantity())
+                .sum();
     }
 
 }

@@ -1,9 +1,13 @@
 package org.youcode.baticuisine.subMenu;
 
 import org.youcode.baticuisine.repositories.implementation.ClientImplementation;
+import org.youcode.baticuisine.repositories.implementation.MaterialImplementation;
 import org.youcode.baticuisine.repositories.implementation.ProjectImplementation;
+import org.youcode.baticuisine.repositories.implementation.WorkforceImplementation;
 import org.youcode.baticuisine.services.ClientService;
+import org.youcode.baticuisine.services.MaterialService;
 import org.youcode.baticuisine.services.ProjectService;
+import org.youcode.baticuisine.services.WorkforceService;
 import org.youcode.baticuisine.views.ProjectView;
 
 import java.util.Scanner;
@@ -48,8 +52,12 @@ public class ProjectSubMenu {
         ProjectImplementation projectImplementation = new ProjectImplementation();
         ProjectService projectService = new ProjectService(projectImplementation);
         ClientImplementation clientImplementation = new ClientImplementation();
+        MaterialImplementation materialImplementation =new MaterialImplementation();
+        WorkforceImplementation workforceImplementation = new WorkforceImplementation();
         ClientService clientService = new ClientService(clientImplementation);
-        ProjectView projectView = new ProjectView(projectService, clientService);
+        MaterialService materialService = new MaterialService(materialImplementation);
+        WorkforceService workforceService = new WorkforceService(workforceImplementation);
+        ProjectView projectView = new ProjectView(projectService,  materialService, workforceService, clientService);
 
         while (true) {
             displayMenu();

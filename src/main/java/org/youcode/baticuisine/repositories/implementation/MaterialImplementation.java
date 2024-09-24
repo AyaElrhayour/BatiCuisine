@@ -27,7 +27,7 @@ public class MaterialImplementation implements MaterialInterface {
         Material material = new Material();
         material.setId(UUID.fromString(resultSet.getString("id")));
         material.setName(resultSet.getString("name"));
-        material.setComponentType(ComponentType.MATERAILS);
+        material.setComponentType(ComponentType.MATERIALS);
         material.setTvaRate(resultSet.getDouble("tvaRate"));
         material.setUnitaryPay(resultSet.getDouble("unitaryPay"));
         material.setQuantity(resultSet.getDouble("quantity"));
@@ -45,7 +45,7 @@ public class MaterialImplementation implements MaterialInterface {
 
     @Override
     public Optional<Material> addMaterial(Material material) {
-        String insertSQL = "INSERT INTO material (id, name, componentType, tvaRate, unitaryPay, quantity, " +
+        String insertSQL = "INSERT INTO materials (id, name, componentType, tvaRate, unitaryPay, quantity, " +
                 "outputFactor, projectId, transportCost) VALUES (?, ?, ?::componentType, ?, ?, ?, ?, ?::uuid, ?)";
         try (PreparedStatement preparedStatement = conn.prepareStatement(insertSQL)){
             preparedStatement.setObject(1, material.getId());
@@ -71,7 +71,7 @@ public class MaterialImplementation implements MaterialInterface {
     @Override
     public Optional<Material> getMaterialByProject(UUID projectId) {
         List<Material> materials = new ArrayList<>();
-        String selectSQL = "SELECT * FROM material WHERE projectId = ?::uuid";
+        String selectSQL = "SELECT * FROM materials WHERE projectId = ?::uuid";
         try (PreparedStatement preparedStatement = conn.prepareStatement(selectSQL)){
             preparedStatement.setObject(1, projectId);
             try(ResultSet resultSet = preparedStatement.executeQuery()){

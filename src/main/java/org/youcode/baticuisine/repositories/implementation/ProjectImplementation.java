@@ -22,7 +22,7 @@ public class ProjectImplementation implements ProjectInterface {
 
     @Override
     public Optional<Project> addProject(Project project) {
-        String insertSQL = "INSERT INTO project (id, ,name, profitMargin, totalCost, projectState, clientId) " +
+        String insertSQL = "INSERT INTO projects (id, name, profitMargin, totalCost, projectState, clientId) " +
                 "VALUES (?, ?, ?, ?, ?::projectstate, ?::uuid)";
         try (PreparedStatement preparedStatement = conn.prepareStatement(insertSQL)) {
             preparedStatement.setObject(1, project.getId());
@@ -44,7 +44,7 @@ public class ProjectImplementation implements ProjectInterface {
 
     @Override
     public Optional<Project> getProject(UUID id) {
-        String selectSQL = "SELECT * FROM project WHERE projectId = ?::uuid";
+        String selectSQL = "SELECT * FROM projects WHERE id = ?::uuid";
         try (PreparedStatement preparedStatement = conn.prepareStatement(selectSQL)) {
             preparedStatement.setObject(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -62,7 +62,7 @@ public class ProjectImplementation implements ProjectInterface {
     @Override
     public List<Project> getAllProjects() {
         List<Project> projects = new ArrayList<>();
-        String selectAllSQL = "SELECT * FROM project";
+        String selectAllSQL = "SELECT * FROM projects";
         try (Statement statement = conn.createStatement();
              ResultSet resultSet = statement.executeQuery(selectAllSQL)) {
             while (resultSet.next()) {
@@ -77,7 +77,7 @@ public class ProjectImplementation implements ProjectInterface {
     @Override
     public List<Project> getProjectsByClientId(UUID clientId) {
         List<Project> projects = new ArrayList<>();
-        String selectSQL = "SELECT * FROM project WHERE clientId = ?::uuid";
+        String selectSQL = "SELECT * FROM projects WHERE clientId = ?::uuid";
         try (PreparedStatement preparedStatement = conn.prepareStatement(selectSQL)) {
             preparedStatement.setObject(1, clientId);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -93,7 +93,7 @@ public class ProjectImplementation implements ProjectInterface {
 
     @Override
     public boolean deleteProject(UUID projectId) {
-        String deleteSQL = "DELETE FROM project WHERE projectId = ?::uuid";
+        String deleteSQL = "DELETE FROM projects WHERE id = ?::uuid";
         try (PreparedStatement preparedStatement = conn.prepareStatement(deleteSQL)) {
             preparedStatement.setObject(1, projectId);
             int affectedRows = preparedStatement.executeUpdate();
@@ -105,14 +105,13 @@ public class ProjectImplementation implements ProjectInterface {
 
     @Override
     public Optional<Project> updateProject(UUID projectId, Project project) {
-        String updateSQL = "UPDATE project SET projectName = ?, profitMargin = ?, totalCost = ?, projectState = ?::projectstate, clientId = ?::uuid WHERE projectId = ?::uuid";
+        String updateSQL = "UPDATE projects SET name = ?, profitMargin = ?, totalCost = ?, projectState = ?::projectstate WHERE id = ?::uuid";
         try (PreparedStatement preparedStatement = conn.prepareStatement(updateSQL)) {
             preparedStatement.setString(1, project.getProjectName());
             preparedStatement.setDouble(2, project.getProfitMargin());
             preparedStatement.setDouble(3, project.getTotalCost());
             preparedStatement.setString(4, project.getProjectState().toString());
-            preparedStatement.setObject(5, project.getClient().getId());
-            preparedStatement.setObject(6, projectId);
+            preparedStatement.setObject(5, projectId);
 
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0) {
@@ -126,8 +125,8 @@ public class ProjectImplementation implements ProjectInterface {
 
     private Project mapRowToProject(ResultSet resultSet) throws SQLException {
         Project project = new Project();
-        project.setId(UUID.fromString(resultSet.getString("projectId")));
-        project.setProjectName(resultSet.getString("projectName"));
+        project.setId(UUID.fromString(resultSet.getString("id")));
+        project.setProjectName(resultSet.getString("name"));
         project.setProfitMargin(resultSet.getDouble("profitMargin"));
         project.setTotalCost(resultSet.getDouble("totalCost"));
         project.setProjectState(ProjectState.valueOf(resultSet.getString("projectState")));

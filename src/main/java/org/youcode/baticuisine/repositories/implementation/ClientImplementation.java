@@ -30,7 +30,7 @@ public class ClientImplementation implements ClientInterface {
 
     @Override
     public Optional<Client> addClient(Client client) {
-        String insertSQL = "INSERT INTO client (id, name, address, telephone, isProfessional) " +
+        String insertSQL = "INSERT INTO clients (id, name, address, telephone, isProfessional) " +
                 "VALUES (?,?,?,?,?)";
         try(PreparedStatement preparedStatement = conn.prepareStatement(insertSQL)){
             preparedStatement.setObject(1,client.getId());
@@ -51,9 +51,9 @@ public class ClientImplementation implements ClientInterface {
 
     @Override
     public Optional<Client> getClient(UUID id) {
-        String selectClientSQL = "SELECT * FROM client WHERE id = ?";
+        String selectClientSQL = "SELECT * FROM clients WHERE id = ?::uuid";
         try (PreparedStatement preparedStatement = conn.prepareStatement(selectClientSQL)) {
-            preparedStatement.setString(1, id.toString());
+            preparedStatement.setObject(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     Client client = clientResultSet(resultSet);
@@ -69,7 +69,7 @@ public class ClientImplementation implements ClientInterface {
 
     @Override
     public Optional<Client> updateClient(UUID id, Client client) {
-        String updateSQL = "UPDATE client SET name = ?, address = ?, telephone = ?, " +
+        String updateSQL = "UPDATE clients SET name = ?, address = ?, telephone = ?, " +
                 "isProfessional = ? WHERE id = ?::uuid";
         try (PreparedStatement preparedStatement = conn.prepareStatement(updateSQL)) {
             preparedStatement.setString(1, client.getName());
@@ -91,7 +91,7 @@ public class ClientImplementation implements ClientInterface {
 
     @Override
     public boolean deleteClient(UUID id) {
-        String deleteSQL = "DELETE FROM client WHERE id =?::uuid";
+        String deleteSQL = "DELETE FROM clients WHERE id =?::uuid";
         try(PreparedStatement preparedStatement = conn.prepareStatement(deleteSQL)){
             preparedStatement.setObject(1,String.valueOf(id));
 
@@ -106,7 +106,7 @@ public class ClientImplementation implements ClientInterface {
     @Override
     public List<Client> getAllClients() {
         List<Client> clients = new ArrayList<>();
-        String selectAllSQL = "SELECT * FROM client";
+        String selectAllSQL = "SELECT * FROM clients";
         try (Statement statement = conn.createStatement();
              ResultSet resultSet = statement.executeQuery(selectAllSQL)) {
             while (resultSet.next()) {

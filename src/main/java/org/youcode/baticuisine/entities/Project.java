@@ -2,6 +2,7 @@ package org.youcode.baticuisine.entities;
 
 import org.youcode.baticuisine.enums.ProjectState;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,7 +15,8 @@ public class Project {
     private ProjectState projectState;
     private Client client;
     private List<Estimate> estimates;
-    private List<Component> components;
+    private List<Material> materials = new ArrayList<>();
+    private List<Workforce>  workforces = new ArrayList<>();
 
     public Project() {}
 
@@ -74,5 +76,21 @@ public class Project {
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    public List<Material> getMaterials() {
+        return materials;
+    }
+
+    public void setMaterials(List<Material> materials) {
+        this.materials = materials;
+    }
+
+    public List<Workforce> getWorkforces() {
+        return workforces;
+    }
+
+    public void setWorkforces(List<Workforce> workforces) {
+        this.workforces = workforces;
     }
 }

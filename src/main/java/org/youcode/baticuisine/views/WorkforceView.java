@@ -63,7 +63,7 @@ public class WorkforceView {
 
         try {
             UUID projectId = UUID.fromString(userInput);
-            Workforce workforce = workforceService.getWorkforceByProjectId(userInput);
+            Workforce workforce = (Workforce) workforceService.getWorkforceByProjectId(userInput);
 
             if (workforce != null) {
                 System.out.println("╔═══════════════════════════════════════════════════════════════════════════════════════╗");

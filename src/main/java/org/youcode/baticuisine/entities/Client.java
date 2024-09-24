@@ -8,13 +8,13 @@ public class Client {
     private String name;
     private String address;
     private String telephone;
-    private Boolean isProfessional;
+    private boolean isProfessional;
     private List<Project> projects;
 
 
     public Client(){}
 
-    public Client(UUID id, String name, String address, String telephone, Boolean isProfessional){
+    public Client(UUID id, String name, String address, String telephone, boolean isProfessional){
         this.id = id;
         this.name = name;
         this.address = address;
@@ -54,11 +54,11 @@ public class Client {
         this.telephone = telephone;
     }
 
-    public Boolean getIsProfessional() {
+    public boolean getIsProfessional() {
         return isProfessional;
     }
 
-    public void setIsProfessional(Boolean professional) {
+    public void setIsProfessional(boolean professional) {
         isProfessional = professional;
     }
 

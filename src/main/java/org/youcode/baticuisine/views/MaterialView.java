@@ -40,7 +40,7 @@ public class MaterialView {
             Material material = new Material(
                     UUID.randomUUID(),
                     materialName,
-                    ComponentType.MATERAILS,
+                    ComponentType.MATERIALS,
                     tvaRate,
                     unitaryPay,
                     quantity,
@@ -63,7 +63,7 @@ public class MaterialView {
 
         try {
             UUID projectId = UUID.fromString(userInput);
-            Material material = materialService.getMaterialByProjectId(userInput);
+            Material material = (Material) materialService.getMaterialByProjectId(userInput);
 
             if (material != null) {
                 System.out.println("╔═══════════════════════════════════════════════════════════════════════════════════════╗");

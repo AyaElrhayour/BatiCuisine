@@ -5,6 +5,7 @@ import org.youcode.baticuisine.repositories.interfaces.ClientInterface;
 import org.youcode.baticuisine.utils.BaseValidation;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,12 +19,16 @@ public class ClientService {
 
     public void addClient (Client client){
         if(client.getName() == null || client.getAddress() == null
-                || client.getTelephone() == null || client.getIsProfessional() == null ){
+                || client.getTelephone() == null || !client.getIsProfessional()){
             System.out.println("The Fields Unfilled!");
         }
+        if (Objects.equals(String.valueOf(client.getIsProfessional()), "yes")) {
+            client.setIsProfessional(true);
+        }else if(Objects.equals(String.valueOf(client.getIsProfessional()), "no")){
+            client.setIsProfessional(false);
+        }
         Optional<Client> addedClient = clientInterface.addClient(client);
-        if (addedClient.isPresent())
-            System.out.println("Client Is Added Successfully!");
+
     }
 
     public Client getClientById(String clientIdInput){

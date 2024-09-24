@@ -11,7 +11,7 @@ public class Material extends Component{
 
     public Material (UUID id, String name, ComponentType componentType, Double tvaRate,
                      Double unitaryPay, Double quantity, Double outputFactor, Project project, Double transportCost){
-        super(id, name, ComponentType.MATERAILS, tvaRate, unitaryPay, quantity, outputFactor, project);
+        super(id, name, ComponentType.MATERIALS, tvaRate, unitaryPay, quantity, outputFactor, project);
         this.transportCost = transportCost;
 
     }

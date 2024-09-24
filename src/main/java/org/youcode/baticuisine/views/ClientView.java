@@ -18,11 +18,25 @@ public class ClientView {
     }
 
     public void addClient() {
+        Scanner scanner = new Scanner(System.in);
         try {
             String name = BaseValidation.getValidInput("Enter Client Name:", "name");
             String address = BaseValidation.getValidInput("Enter Client Address:", "address");
             String telephone = BaseValidation.getValidInput("Enter Client Phone Number:", "telephone");
-            Boolean isProfessional = Boolean.valueOf(BaseValidation.getValidInput("Is The Client Professional (y/n)", "isProfessional"));
+            boolean isProfessional = true;
+            while (true) {
+                System.out.print("Is The Client Professional (yes/no): ");
+                String choice = scanner.nextLine();
+
+                if (choice.trim().toLowerCase().equals("yes")) {
+                    break;
+                } else if (choice.trim().toLowerCase().equals("no")) {
+                    isProfessional = false;
+                    break;
+                } else {
+                    System.out.println("Invalid input. Please enter 'yes' or 'no'.");
+                }
+            }
 
             Client client = new Client(
                     UUID.randomUUID(),
@@ -97,14 +111,14 @@ public class ClientView {
             String name = BaseValidation.getValidInput("Enter New Client Name:", "name");
             String address = BaseValidation.getValidInput("Enter New Address:", "address");
             String telephone = BaseValidation.getValidInput("Enter New Telephone:", "telephone");
-            Boolean isProfessional = Boolean.valueOf(BaseValidation.getValidInput("Is The Client Professional (y/n)", "isProfessional"));
+            String isProfessional = BaseValidation.getValidInput("Is The Client Professional (yes/no)", "isProfessional");
 
             Client client = new Client(
-                    UUID.randomUUID(),
+                    UUID.fromString(id),
                     name,
                     address,
                     telephone,
-                    isProfessional
+                    Boolean.parseBoolean(isProfessional)
             );
 
             Client updateClient = clientService.updateClient(id, client);

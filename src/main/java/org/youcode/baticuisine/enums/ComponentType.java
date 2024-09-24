@@ -1,6 +1,6 @@
 package org.youcode.baticuisine.enums;
 
 public enum ComponentType {
-    MATERAILS,
+    MATERIALS,
     WORKFORCE,
 }
