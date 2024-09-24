@@ -15,15 +15,13 @@ public class EstimateService {
         this.estimateInterface = estimateInterface;
     }
 
-    public void createEstimate(Estimate estimate) {
-        if (estimate.getEstimatedAmount() == null || estimate.getIssuedDate() == null
-                || estimate.getValidityDate() == null || estimate.getProject() == null) {
-            System.out.println("The Fields Unfilled!");
-            return;
+    public boolean createEstimate(Estimate estimate) {
+        if (estimate.getEstimatedAmount() == null || estimate.getIssuedDate() == null || estimate.getValidityDate() == null
+                 || estimate.getProject() == null) {
+            return false;
         }
         Optional<Estimate> createdEstimate = estimateInterface.createEstimate(estimate);
-        if (createdEstimate.isPresent())
-            System.out.println("Estimate Created Successfully!");
+        return createdEstimate.isPresent();
     }
 
     public Estimate getEstimateByProject(String projectIdInput) {
@@ -44,5 +42,16 @@ public class EstimateService {
         UUID estimateId = UUID.fromString(estimateIdInput);
         Optional<Estimate> validatedEstimate = estimateInterface.validateEstimate(estimateId, estimate);
         return validatedEstimate.isPresent();
+    }
+
+    public Optional<Estimate> getEstimateById(String estimateId) {
+        try {
+            UUID id = UUID.fromString(estimateId);
+
+            return estimateInterface.getEstimateById(id);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid Estimate ID: " + estimateId);
+            return Optional.empty();
+        }
     }
 }

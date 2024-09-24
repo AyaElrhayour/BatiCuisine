@@ -18,7 +18,7 @@ public class EstimateImplementation implements EstimateInterface {
 
     @Override
     public Optional<Estimate> createEstimate(Estimate estimate) {
-        String insertSQL = "INSERT INTO estimate (id, estimatedAmount, issuedDate, validityDate, accepted, projectId) " +
+        String insertSQL = "INSERT INTO estimates (id, estimatedAmount, issueddate, validityDate, accepted, projectId) " +
                 "VALUES (?, ?, ?, ?, ?, ?::uuid)";
         try (PreparedStatement preparedStatement = conn.prepareStatement(insertSQL)) {
             preparedStatement.setObject(1, estimate.getId());
@@ -40,7 +40,7 @@ public class EstimateImplementation implements EstimateInterface {
 
     @Override
     public Optional<Estimate> getEstimateByProject(UUID projectId) {
-        String selectSQL = "SELECT * FROM estimate WHERE projectId = ?::uuid";
+        String selectSQL = "SELECT * FROM estimates WHERE projectId = ?::uuid";
         try (PreparedStatement preparedStatement = conn.prepareStatement(selectSQL)) {
             preparedStatement.setObject(1, projectId);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -57,7 +57,7 @@ public class EstimateImplementation implements EstimateInterface {
 
     @Override
     public Optional<Estimate> validateEstimate(UUID id, Estimate estimate) {
-        String updateSQL = "UPDATE estimate SET accepted = TRUE WHERE id = ?::uuid";
+        String updateSQL = "UPDATE estimates SET accepted = TRUE WHERE id = ?::uuid";
         try (PreparedStatement preparedStatement = conn.prepareStatement(updateSQL)) {
             preparedStatement.setObject(1, id);
 
@@ -71,6 +71,23 @@ public class EstimateImplementation implements EstimateInterface {
             throw new RuntimeException(e);
         }
     }
+    public Optional<Estimate> getEstimateById(UUID id) {
+        String selectSQL = "SELECT * FROM estimates WHERE id = ?::uuid";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(selectSQL)) {
+            preparedStatement.setObject(1, id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    Estimate estimate = mapRowToEstimate(resultSet);
+                    return Optional.of(estimate);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return Optional.empty();
+    }
+
 
     private Estimate mapRowToEstimate(ResultSet resultSet) throws SQLException {
         Estimate estimate = new Estimate();

@@ -11,4 +11,5 @@ public interface EstimateInterface {
     Optional<Estimate> createEstimate (Estimate estimate);
     Optional<Estimate> getEstimateByProject (UUID projectId);
     Optional<Estimate> validateEstimate(UUID id, Estimate estimate);
+    Optional<Estimate> getEstimateById (UUID id);
 }

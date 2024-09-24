@@ -2,6 +2,7 @@ package org.youcode.baticuisine;
 
 import org.youcode.baticuisine.db.DBConnection;
 import org.youcode.baticuisine.subMenu.ClientSubMenu;
+import org.youcode.baticuisine.subMenu.EstimateSubMenu;
 import org.youcode.baticuisine.subMenu.ProjectSubMenu;
 
 import java.util.Scanner;
@@ -54,7 +55,7 @@ public static void main(String[] args) {
                     ProjectSubMenu.projectManagementMenu();
                     break;
                 case 3:
-
+                    EstimateSubMenu.estimateManagementMenu();
                     break;
                 case 4:
                     System.out.println("Thank You For Your Hard Work! Have A Good Day!");

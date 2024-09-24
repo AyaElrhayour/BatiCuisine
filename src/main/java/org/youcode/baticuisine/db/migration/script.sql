@@ -22,7 +22,7 @@ CREATE TABLE projects (
 CREATE TABLE estimates (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     estimatedAmount DOUBLE PRECISION,
-    estimatedDate DATE,
+    issuedDate DATE,
     validityDate DATE,
     accepted BOOLEAN,
     projectId UUID,

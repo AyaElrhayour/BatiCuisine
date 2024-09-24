@@ -6,14 +6,14 @@ import java.util.UUID;
 
 public class Component {
 
-    private UUID id;
-    private String name;
-    private ComponentType componentType;
-    private Double tvaRate;
-    private Double unitaryPay;
-    private Double quantity;
-    private Double outputFactor;
-    private Project project;
+    protected UUID id;
+    protected String name;
+    protected ComponentType componentType;
+    protected Double tvaRate;
+    protected Double unitaryPay;
+    protected Double quantity;
+    protected Double outputFactor;
+    protected Project project;
 
     public Component (){}
 

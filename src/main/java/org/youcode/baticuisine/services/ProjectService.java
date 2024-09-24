@@ -16,15 +16,13 @@ public class ProjectService {
         this.projectInterface = projectInterface;
     }
 
-    public void addProject(Project project) {
+    public Optional<Project> addProject(Project project) {
         if (project.getProjectName() == null || project.getProfitMargin() == null
                 || project.getTotalCost() == null || project.getProjectState() == null || project.getClient() == null) {
             System.out.println("The Fields Unfilled!");
-            return;
+            Optional.empty();
         }
-        Optional<Project> addedProject = projectInterface.addProject(project);
-        if (addedProject.isPresent())
-            System.out.println("Project Added Successfully!");
+        return  projectInterface.addProject(project);
     }
 
     public Project getProjectById(String projectIdInput) {

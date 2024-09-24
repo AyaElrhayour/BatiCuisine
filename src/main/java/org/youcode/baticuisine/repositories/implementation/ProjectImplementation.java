@@ -28,7 +28,11 @@ public class ProjectImplementation implements ProjectInterface {
             preparedStatement.setObject(1, project.getId());
             preparedStatement.setString(2, project.getProjectName());
             preparedStatement.setDouble(3, project.getProfitMargin());
-            preparedStatement.setDouble(4, project.getTotalCost());
+            if (project.getTotalCost() != null) {
+                preparedStatement.setDouble(4, project.getTotalCost());
+            } else {
+                preparedStatement.setNull(4, Types.DOUBLE);
+            }
             preparedStatement.setString(5, project.getProjectState().toString());
             preparedStatement.setObject(6, project.getClient().getId());
 
